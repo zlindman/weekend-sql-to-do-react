@@ -1,6 +1,6 @@
 import './App.css';
-import {useState, useEffect} from 'react';
-import axios from 'axios';
+import ToDoList from './ToDoList';
+import { useState } from 'react';
 
 function App () {
   
@@ -9,9 +9,12 @@ function App () {
   return (
     <div>
       <h1>TO DO APP</h1>
+      <ToDoList/>
     </div>
   );
 
 }
+
+
 
 export default App;
