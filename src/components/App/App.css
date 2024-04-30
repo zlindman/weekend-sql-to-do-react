@@ -21,3 +21,17 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.task-completed {
+  background-color: rgb(123, 117, 117);
+}
+
+.task-uncompleted {
+  font-weight: bold;
+}
+
+
+
+
+
+

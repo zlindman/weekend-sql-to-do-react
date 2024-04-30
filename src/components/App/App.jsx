@@ -4,13 +4,13 @@ import axios from 'axios';
 
 function App () {
   
-  const [toDoItem, setToDoItem] = useState('');
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
 
   const getTaskList = () => {
     axios.get('/api/todo').then(response => {
-      setToDoItem(response.data);
+      console.log(response.data);
+      setTasks(response.data);
     }).catch(error => {
       console.log(error);
       alert('Something went wrong!');
@@ -23,16 +23,38 @@ function App () {
   }, []);
 
 
-  function addTask(){
-      setTasks
+  const addTask = (e) => {
+      e.preventDefault();
+      console.log('add task', newTask);
+      const data = { task: newTask }
+      axios.post('/api/todo', data).then((response) => {
+        getTaskList();
+        setNewTask('');
+      }).catch(error => {
+        console.log(error);
+        alert('Something went wrong!');
+      })
+
   }
 
-  function deleteTask(id){
-
+  const deleteTask = (id) => {
+    console.log('remove task', id);
+    axios.delete(`/api/todo/${id}`).then((response)  => {
+        getTaskList();
+    }).catch((error) => {
+        console.log(error);
+        alert('Something went wrong!');
+    })
   }
 
-  function prioritizeTask(id){
-
+  const toggleTask = (id) => {
+    console.log('toggle', id);
+    axios.put(`/api/todo/${id}`).then((response) => {
+        getTaskList();
+    }).catch((error) => {
+        console.log(error);
+        alert('Something went wrong!');
+    })
   }
 
 
@@ -51,15 +73,21 @@ function App () {
           type="submit" value="Add Task"
           /> 
         </form>
-        <ol>
-            {tasks.map((task, id) => 
-                <li key={id}>
-                    {task}
-                    <button onClick={() => deleteTask(id)}>Delete</button>
-                    <button onClick={() => prioritizeTask(id)}>Priority</button>
-                </li>
-        )}
-        </ol>
+        <div>
+          {
+          tasks.map(task => (
+            <div className={task.completed ? 'task-completed' : 'task-uncompleted'} key={task.id}>
+              {task.task}
+              <button onClick={() => deleteTask(task.id)}>Remove Task</button>
+              {
+                task.completed ?
+                <button onClick={() => toggleTask(task.id)}>Undo</button> :
+                <button onClick={() => toggleTask(task.id)}>Completed</button>
+              }
+            </div>
+          ))
+          }
+        </div>
       </div>
     </div>
   );
